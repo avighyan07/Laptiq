@@ -78,7 +78,8 @@ df_laptop = pickle.load(open('models/df.pkl', 'rb'))
 # ======================
 # Load or initialize reviews data
 # ======================
-DATA_FILE = r'C:\Users\Arunava Chakraborty\Desktop\Senti_Analys\reviews.csv'
+DATA_FILE = os.path.join(os.path.dirname(__file__), 'reviews.csv')
+
 expected_columns = ['company', 'model_name', 'user_name', 'rating', 'review_text', 'sentiment', 'date', 'aspect_sentiments']
 
 try:
