@@ -1,0 +1,5 @@
+username,email,password
+virat,virat@gmail.com,pbkdf2:sha256:1000000$BCc6WkWroJT23AFI$07baf2fb0648dbb9d1d7659ce7dbff7ee94ced8ff8147d1a7d5edccad8a815fb
+Rahul,Rahul@gmail.com,pbkdf2:sha256:1000000$DWwR1TGMUTGn3I4w$9438cb1d624d0d98d551ff3162a3ba2bf3f1451d391c14ac5bea87d24f986adb
+Manoj,manoj@gmail.com,pbkdf2:sha256:1000000$SHMnHICpGBTDmi5q$153d576dd43f4c5a09a9d147b4f51d2811a7f9bb1788a0668036148c4c4cc422
+Risabh,risabh@gmail.com,pbkdf2:sha256:1000000$tix4aMu8in94Hwhh$41b7c5e3b6a038845fafe412d4a4c5f4a96c398dd695733c6d92e205835eca51

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<h2>Product Reviews Dashboard</h2>
+
+<style>
+  .accordion {
+    background-color: #2c2c2c;
+    color: #d4af37;
+    cursor: pointer;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    transition: 0.4s;
+    border-radius: 5px;
+  }
+
+  .active, .accordion:hover {
+    background-color: #bfa233;
+    color: #121212;
+  }
+
+  .panel {
+    padding: 0 15px;
+    background-color: #1e1e1e;
+    display: none;
+    overflow: hidden;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  .review-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .review-column {
+    width: 48%;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 300px;
+  }
+</style>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% for p in products %}
+  <button class="accordion">{{ p.company }} - {{ p.model_name }}</button>
+  <div class="panel">
+    <p><strong>Average Rating:</strong>
+      {% for i in range(1, 6) %}
+        {% if i <= p.avg_rating|round(0, 'floor') %} ⭐ {% else %} ☆ {% endif %}
+      {% endfor %}
+      ({{ '%.2f' % p.avg_rating }})
+    </p>
+
+    <div class="chart-container">
+      <canvas id="sentimentChart{{ loop.index }}"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="ratingChart{{ loop.index }}"></canvas>
+    </div>
+<h3>Word Clouds</h3>
+<div style="display:flex; justify-content:space-around;">
+  <div>
+    <h4>Positive Reviews</h4>
+    <img src="{{ url_for('static', filename='pos_wordcloud.png') }}" alt="Positive Word Cloud" style="max-width:400px;">
+  </div>
+  <div>
+    <h4>Negative Reviews</h4>
+    <img src="{{ url_for('static', filename='neg_wordcloud.png') }}" alt="Negative Word Cloud" style="max-width:400px;">
+  </div>
+</div>
+
+    <div class="review-section">
+      <div class="review-column">
+        <h4>Positive Reviews:</h4>
+        <ul>
+          {% for review in p.recent_reviews if review.sentiment == 2 %}
+            <li><strong>{{ review.user_name }}</strong> ({{ review.rating }}⭐): {{ review.review_text }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="review-column">
+        <h4>Negative Reviews:</h4>
+        <ul>
+          {% for review in p.recent_reviews if review.sentiment == 1 %}
+            <li><strong>{{ review.user_name }}</strong> ({{ review.rating }}⭐): {{ review.review_text }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+{% endfor %}
+
+<script>
+  var acc = document.getElementsByClassName("accordion");
+  for (var i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      var isActive = this.classList.contains("active");
+      for (var j = 0; j < acc.length; j++) {
+        acc[j].classList.remove("active");
+        acc[j].nextElementSibling.style.display = "none";
+      }
+      if (!isActive) {
+        this.classList.add("active");
+        this.nextElementSibling.style.display = "block";
+      }
+    });
+  }
+
+  // Sentiment and rating charts
+  {% for p in products %}
+    // Sentiment chart
+    var ctx{{ loop.index }} = document.getElementById('sentimentChart{{ loop.index }}').getContext('2d');
+    var sentimentLabels = [];
+    var sentimentData = [];
+    {% for k,v in p.sentiment_counts.items() %}
+      sentimentLabels.push('{{ "Good" if k==2 else "Bad" }}');
+      sentimentData.push({{ v }});
+    {% endfor %}
+    var chart{{ loop.index }} = new Chart(ctx{{ loop.index }}, {
+      type: 'bar',
+      data: {
+        labels: sentimentLabels,
+        datasets: [{
+          label: 'Sentiment Count',
+          data: sentimentData,
+          backgroundColor: ['#d4af37', '#bfa233']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, ticks: { color: 'white' } },
+          x: { ticks: { color: 'white' } }
+        },
+        plugins: { legend: { labels: { color: 'white' } } }
+      }
+    });
+
+    // Rating distribution pie chart
+    var ctxRating{{ loop.index }} = document.getElementById('ratingChart{{ loop.index }}').getContext('2d');
+    var ratingLabels = ['1⭐', '2⭐', '3⭐', '4⭐', '5⭐'];
+    var ratingData = [
+      {{ p.rating_counts[1] }},
+      {{ p.rating_counts[2] }},
+      {{ p.rating_counts[3] }},
+      {{ p.rating_counts[4] }},
+      {{ p.rating_counts[5] }}
+    ];
+    var ratingChart{{ loop.index }} = new Chart(ctxRating{{ loop.index }}, {
+      type: 'pie',
+      data: {
+        labels: ratingLabels,
+        datasets: [{
+          label: 'Rating Distribution',
+          data: ratingData,
+          backgroundColor: ['#ff4d4d', '#ff944d', '#ffff66', '#99e699', '#66b3ff']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: 'white' } } }
+      }
+    });
+  {% endfor %}
+</script>
+
+{% endblock %}

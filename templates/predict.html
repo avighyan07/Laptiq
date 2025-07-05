@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Laptop Price Prediction Result{% endblock %}
+
+{% block content %}
+<h2>Laptop Price Prediction Result 💻</h2>
+
+{% if price %}
+  <p style="font-size: 24px; color: gold; font-weight: bold;">
+    Estimated Price: ₹{{ price }}
+  </p>
+{% else %}
+  <p>No prediction made yet.</p>
+{% endif %}
+
+<a href="{{ url_for('predict_form') }}">
+  <button>Predict Another Price</button>
+</a>
+
+<a href="{{ url_for('index') }}">
+  <button>Back to Home</button>
+</a>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Home | LaptiQ{% endblock %}
+
+{% block content %}
+<nav>
+  {% if current_user.is_authenticated %}
+   
+  {% else %}
+    <a href="{{ url_for('signup') }}">Signup</a>
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% if current_user.is_authenticated %}
+  <div class="welcome-container">
+    <h1>Welcome, {{ current_user.username }}</h1>
+  </div>
+{% endif %}
+
+<style>
+.flash-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.flash {
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.flash.success {
+  background-color: #d4af37;
+  color:rgb(196, 14, 14);
+}
+
+.flash.danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.welcome-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.welcome-container h1 {
+  font-size: 36px;
+  color: red;
+}
+
+button.disabled {
+  background-color: grey !important;
+  cursor: not-allowed;
+}
+</style>
+
+<h2>Welcome to LaptiQ – Smarter Laptop Choices 🧠💻</h2>
+
+<p style="text-align:center; font-size:18px; line-height:1.6;">
+  Discover authentic user experiences, AI-powered insights, and real-time price predictions to choose your next laptop confidently. <br>
+  <span style="color:#d4af37; font-weight:bold;">Empowering decisions with data-driven intelligence.</span>
+</p>
+
+<hr style="border: 1px solid #d4af37;">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 30px;">
+
+  <!-- Submit Review Card -->
+  <div style="background: #2c2c2c; border-radius: 10px; padding: 20px; width: 250px; text-align: center; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);">
+    <h3 style="color: #d4af37;">📝 Submit Reviews</h3>
+    <p>Share your genuine feedback on laptops you own.</p>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('submit_review') }}">
+        <button>Submit Review</button>
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}">
+        <button class="disabled">Login to Submit</button>
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Dashboard Card -->
+  <div style="background: #2c2c2c; border-radius: 10px; padding: 20px; width: 250px; text-align: center; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);">
+    <h3 style="color: #d4af37;">📊 View Dashboard</h3>
+    <p>Explore overall ratings and sentiment analytics of laptops.</p>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard') }}">
+        <button>Go to Dashboard</button>
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}">
+        <button class="disabled">Login to View</button>
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Predict Price Card -->
+  <div style="background: #2c2c2c; border-radius: 10px; padding: 20px; width: 250px; text-align: center; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);">
+    <h3 style="color: #d4af37;">💻 Predict Price</h3>
+    <p>Estimate laptop prices based on specifications.</p>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('predict_price') }}">
+        <button>Predict Price</button>
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}">
+        <button class="disabled">Login to Predict</button>
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Why LaptiQ Card -->
+  <div style="background: #2c2c2c; border-radius: 10px; padding: 20px; width: 250px; text-align: center; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);">
+    <h3 style="color: #d4af37;">💡 Why LaptiQ?</h3>
+    <p>Transparent reviews and AI-based insights for smarter purchase decisions.</p>
+  </div>
+
+</div>
+
+<hr style="border: 1px solid #d4af37; margin-top:40px;">
+
+<h3 style="text-align:center; color:#d4af37;">✨ Platform Features</h3>
+<ul style="max-width:600px; margin:auto; font-size:16px; line-height:1.8;">
+  <li>✅ AI-powered sentiment classification of reviews</li>
+  <li>✅ Separate dashboard for positive & negative feedback</li>
+  <li>✅ Product-wise aggregated ratings and analytics</li>
+  <li>✅ Laptop price prediction using ML models</li>
+  <li>✅ Easy review submission via URL extraction or manual entry</li>
+  <li>✅ Built for students, professionals, and tech enthusiasts</li>
+  <li>✅ AI insights trusted by laptop buyers worldwide</li>
+  <li>✅ Modern dark theme with gold highlights</li>
+  <li>✅ No more confusion – make the smartest purchase today</li>
+</ul>
+
+<div style="text-align:center; margin-top:30px;">
+   <p style="font-size:16px; color:#d4af37;">Connect with Avighyan ✨</p>
+
+  <a href="mailto:avighyanchakraborty@gmail.com" target="_blank" style="margin: 0 10px; color: #d4af37; text-decoration: none;">
+    ✉️ Gmail
+  </a>
+  |
+  <a href="https://www.linkedin.com/in/avighyan-chakraborty-823506370" target="_blank" style="margin: 0 10px; color: #d4af37; text-decoration: none;">
+    💼 LinkedIn
+  </a>
+  |
+  <a href="https://github.com/avighyan07" target="_blank" style="margin: 0 10px; color: #d4af37; text-decoration: none;">
+    🐦 Github
+  </a>
+</div>
+
+{% endblock %}

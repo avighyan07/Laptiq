@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Submit Review{% endblock %}
+{% block content %}
+<h2>Submit Your Laptop Review</h2>
+
+<form method="post">
+  <label>Product URL:</label><br>
+  <input type="text" name="url" id="url" placeholder="Amazon URL"><br>
+  <span id="url-msg" style="font-weight:bold;"></span><br><br>
+
+  <label>Company:</label><br>
+  <input type="text" name="company" id="company"><br>
+
+  <label>Model Name:</label><br>
+  <input type="text" name="model_name" id="model_name"><br><br>
+
+  <label>Your Name:</label><br>
+  <input type="text" name="user_name"><br><br>
+
+  <label>Rating (1-5):</label><br>
+  <input type="number" name="rating" min="1" max="5"><br><br>
+
+  <label>Your Review:</label><br>
+  <textarea name="review_text"></textarea><br><br>
+
+  <button type="submit">Submit</button>
+</form>
+
+<p>{{ message }}</p>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function extractModel() {
+    var url = $('#url').val();
+    if(url){
+        $.ajax({
+            url: '/extract_model',
+            type: 'POST',
+            data: { url: url },
+            success: function(data){
+                if(data.success){
+                    $('#company').val(data.company).prop('disabled', true);
+                    $('#model_name').val(data.model_name).prop('disabled', true);
+                    $('#url-msg').text('✅ Extracted: ' + data.company + ' ' + data.model_name).css('color','green');
+                } else {
+                    $('#url-msg').text('❌ Could not extract. Please enter manually.').css('color','red');
+                    $('#company').val('').prop('disabled', false);
+                    $('#model_name').val('').prop('disabled', false);
+                }
+            },
+            error: function(){
+                $('#url-msg').text('⚠️ Error processing URL.').css('color','orange');
+                $('#company').prop('disabled', false);
+                $('#model_name').prop('disabled', false);
+            }
+        });
+    } else {
+        $('#url-msg').text('');
+        $('#company').prop('disabled', false);
+        $('#model_name').prop('disabled', false);
+    }
+}
+
+// Trigger on change
+$('#url').on('change', extractModel);
+
+// Trigger on Enter key press
+$('#url').on('keypress', function(e) {
+    if (e.which == 13) {
+        e.preventDefault(); // prevent form submission
+        extractModel();
+    }
+});
+</script>
+
+
+{% endblock %}

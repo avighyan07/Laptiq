@@ -1,0 +1,23 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+nav {
+  margin-bottom: 20px;
+}
+nav a {
+  margin-right: 15px;
+}
+.product-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.hero {
+  text-align: center;
+  padding: 50px;
+  background: #eef;
+  border-radius: 10px;
+}

@@ -1,0 +1,105 @@
+company,model_name,user_name,rating,review_text,sentiment,date,aspect_sentiments
+HP,I6,Tuhin,2,Bad sound Bad design,1,2025-06-07 18:42:42,"{'sound': 'negative', 'design': 'negative'}"
+Dell,MacBookAir,Dev,4,Good performance,2,2025-05-16 18:42:42,{'performance': 'positive'}
+Dell,Vivobook,Sudip,1,Good design,2,2025-05-28 18:42:42,{'design': 'positive'}
+Asus,MacBookAir,Avighyan,2,Bad display Good design,2,2025-06-07 18:42:42,"{'display': 'negative', 'design': 'positive'}"
+Apple,Yoga,Arunava,2,Good performance Bad sound,2,2025-06-01 18:42:42,"{'performance': 'positive', 'sound': 'negative'}"
+Dell,MacBookAir,Neha,5,Bad display Bad camera,1,2025-05-22 18:42:42,"{'display': 'negative', 'camera': 'negative'}"
+Dell,Inspiron,Neha,1,Good design Bad sound,2,2025-05-18 18:42:42,"{'design': 'positive', 'sound': 'negative'}"
+HP,Inspiron,Ritwik,5,Good sound,2,2025-05-26 18:42:42,{'sound': 'positive'}
+Apple,MacBookAir,Harshit,4,Good camera Good keyboard,2,2025-06-12 18:42:42,"{'camera': 'positive', 'keyboard': 'positive'}"
+Apple,Yoga,Sanya,5,Good display,2,2025-06-09 18:42:42,{'display': 'positive'}
+HP,Inspiron,Meera,2,Good performance Good keyboard,2,2025-06-25 18:42:42,"{'performance': 'positive', 'keyboard': 'positive'}"
+Dell,Inspiron,Raj,2,Bad sound Bad battery,1,2025-06-12 18:42:42,"{'sound': 'negative', 'battery': 'negative'}"
+Lenovo,Vivobook,Jishnu,3,Good price Bad performance,2,2025-06-29 18:42:42,"{'price': 'positive', 'performance': 'negative'}"
+HP,MacBookAir,Sanya,2,Bad performance,1,2025-06-29 18:42:42,{'performance': 'negative'}
+Lenovo,Yoga,Avighyan,5,Bad display Good price,2,2025-06-05 18:42:42,"{'display': 'negative', 'price': 'positive'}"
+Lenovo,I6,Diya,1,Bad design,1,2025-05-08 18:42:42,{'design': 'negative'}
+Apple,Vivobook,Chirag,5,Bad camera,1,2025-06-17 18:42:42,{'camera': 'negative'}
+Dell,I6,Ria,5,Bad design,1,2025-07-02 18:42:42,{'design': 'negative'}
+Dell,MacBookAir,Chirag,1,Bad price,1,2025-06-02 18:42:42,{'price': 'negative'}
+Apple,Inspiron,Sudip,2,Good price Good design,2,2025-07-03 18:42:42,"{'price': 'positive', 'design': 'positive'}"
+Asus,Inspiron,Sudip,3,Bad sound,1,2025-05-14 18:42:42,{'sound': 'negative'}
+Apple,Yoga,Tuhin,3,Good price,2,2025-06-04 18:42:42,{'price': 'positive'}
+Apple,Inspiron,Meera,2,Good display Bad design,2,2025-07-01 18:42:42,"{'display': 'positive', 'design': 'negative'}"
+Asus,Yoga,Dev,2,Bad design,1,2025-05-12 18:42:42,{'design': 'negative'}
+Lenovo,Yoga,Kiran,3,Bad design Bad battery,1,2025-07-04 18:42:42,"{'design': 'negative', 'battery': 'negative'}"
+Lenovo,Vivobook,Sudip,2,Good display Bad battery,2,2025-05-29 18:42:42,"{'display': 'positive', 'battery': 'negative'}"
+Dell,MacBookAir,Diya,3,Good performance,2,2025-05-29 18:42:42,{'performance': 'positive'}
+HP,Vivobook,Kiran,3,Bad keyboard,1,2025-06-05 18:42:42,{'keyboard': 'negative'}
+HP,I6,Arunava,2,Good keyboard Bad price,2,2025-06-03 18:42:42,"{'keyboard': 'positive', 'price': 'negative'}"
+Apple,Inspiron,Avighyan,4,Bad design,1,2025-06-15 18:42:42,{'design': 'negative'}
+Asus,Inspiron,Kiran,5,Good price Bad battery,2,2025-06-12 18:42:42,"{'price': 'positive', 'battery': 'negative'}"
+HP,I6,Meera,1,Good keyboard Bad camera,2,2025-05-20 18:42:42,"{'keyboard': 'positive', 'camera': 'negative'}"
+Asus,Inspiron,Amrita,5,Good display,2,2025-05-15 18:42:42,{'display': 'positive'}
+HP,MacBookAir,Avighyan,5,Bad keyboard Good display,2,2025-05-16 18:42:42,"{'keyboard': 'negative', 'display': 'positive'}"
+Lenovo,Vivobook,Chirag,2,Good display,2,2025-06-27 18:42:42,{'display': 'positive'}
+HP,Inspiron,Arunava,2,Good camera Bad performance,2,2025-06-24 18:42:42,"{'camera': 'positive', 'performance': 'negative'}"
+Lenovo,I6,Diya,5,Bad sound,1,2025-06-19 18:42:42,{'sound': 'negative'}
+Apple,Inspiron,Ria,1,Bad battery Good keyboard,2,2025-06-03 18:42:42,"{'battery': 'negative', 'keyboard': 'positive'}"
+HP,MacBookAir,Harshit,1,Bad display Good camera,2,2025-06-07 18:42:42,"{'display': 'negative', 'camera': 'positive'}"
+Asus,I6,Suman,2,Good performance,2,2025-06-22 18:42:42,{'performance': 'positive'}
+Dell,Inspiron,Soham,2,Bad camera,1,2025-05-27 18:42:42,{'camera': 'negative'}
+Lenovo,Inspiron,Kiran,3,Good sound Bad price,2,2025-06-09 18:42:42,"{'sound': 'positive', 'price': 'negative'}"
+Lenovo,Vivobook,Sudip,3,Good performance,2,2025-05-23 18:42:42,{'performance': 'positive'}
+Apple,Inspiron,Diya,4,Good price,2,2025-06-14 18:42:42,{'price': 'positive'}
+Asus,Inspiron,Kiran,5,Good price Bad design,2,2025-06-04 18:42:42,"{'price': 'positive', 'design': 'negative'}"
+Apple,Vivobook,Jishnu,5,Good battery,2,2025-05-15 18:42:42,{'battery': 'positive'}
+Dell,MacBookAir,Chirag,3,Bad keyboard,1,2025-06-16 18:42:42,{'keyboard': 'negative'}
+Apple,Vivobook,Soham,3,Good camera Good price,2,2025-06-10 18:42:42,"{'camera': 'positive', 'price': 'positive'}"
+Lenovo,I6,Tuhin,4,Good sound,2,2025-05-22 18:42:42,{'sound': 'positive'}
+Apple,MacBookAir,Sudip,4,Bad price Bad display,1,2025-06-17 18:42:42,"{'price': 'negative', 'display': 'negative'}"
+Dell,Inspiron,Srija,3,Good display Bad design,2,2025-06-12 18:42:42,"{'display': 'positive', 'design': 'negative'}"
+HP,Inspiron,Jishnu,3,Bad sound,1,2025-05-27 18:42:42,{'sound': 'negative'}
+Asus,MacBookAir,Srija,4,Good sound Good design,2,2025-06-24 18:42:42,"{'sound': 'positive', 'design': 'positive'}"
+Asus,I6,Ritwik,2,Good performance,2,2025-06-18 18:42:42,{'performance': 'positive'}
+Dell,Inspiron,Chirag,3,Good camera,2,2025-06-24 18:42:42,{'camera': 'positive'}
+HP,Inspiron,Neha,5,Good price Good performance,2,2025-05-15 18:42:42,"{'price': 'positive', 'performance': 'positive'}"
+Apple,Inspiron,Harshit,2,Good keyboard,2,2025-05-28 18:42:42,{'keyboard': 'positive'}
+Lenovo,MacBookAir,Chirag,1,Bad display,1,2025-05-20 18:42:42,{'display': 'negative'}
+Apple,Inspiron,Chirag,1,Bad camera Bad display,1,2025-06-07 18:42:42,"{'camera': 'negative', 'display': 'negative'}"
+Asus,Inspiron,Tuhin,1,Good keyboard,2,2025-06-26 18:42:42,{'keyboard': 'positive'}
+Asus,MacBookAir,Srija,2,Good display Bad camera,2,2025-06-23 18:42:42,"{'display': 'positive', 'camera': 'negative'}"
+Lenovo,I6,Harshit,4,Bad price,1,2025-06-08 18:42:42,{'price': 'negative'}
+Lenovo,Yoga,Ritwik,4,Good battery Bad performance,2,2025-07-03 18:42:42,"{'battery': 'positive', 'performance': 'negative'}"
+Asus,MacBookAir,Ritwik,5,Bad performance,1,2025-05-10 18:42:42,{'performance': 'negative'}
+HP,Inspiron,Kiran,2,Good price,2,2025-06-24 18:42:42,{'price': 'positive'}
+Lenovo,Inspiron,Neha,3,Good design,2,2025-07-02 18:42:42,{'design': 'positive'}
+Dell,Inspiron,Kiran,2,Good sound Good price,2,2025-05-10 18:42:42,"{'sound': 'positive', 'price': 'positive'}"
+Lenovo,Yoga,Srija,2,Bad sound Bad performance,1,2025-05-12 18:42:42,"{'sound': 'negative', 'performance': 'negative'}"
+Apple,Vivobook,Sudip,4,Good design Good performance,2,2025-06-23 18:42:42,"{'design': 'positive', 'performance': 'positive'}"
+Asus,MacBookAir,Avighyan,2,Good keyboard Bad price,2,2025-07-05 18:42:42,"{'keyboard': 'positive', 'price': 'negative'}"
+Apple,Yoga,Avighyan,2,Good performance,2,2025-05-30 18:42:42,{'performance': 'positive'}
+Asus,I6,Chirag,5,Bad keyboard Good sound,2,2025-07-05 18:42:42,"{'keyboard': 'negative', 'sound': 'positive'}"
+Apple,Yoga,Jishnu,2,Bad camera Good performance,2,2025-05-31 18:42:42,"{'camera': 'negative', 'performance': 'positive'}"
+Dell,MacBookAir,Ria,1,Bad camera Bad performance,1,2025-05-20 18:42:42,"{'camera': 'negative', 'performance': 'negative'}"
+Apple,MacBookAir,Neha,4,Bad display Bad price,1,2025-05-28 18:42:42,"{'display': 'negative', 'price': 'negative'}"
+Apple,Inspiron,Suman,3,Good keyboard,2,2025-07-01 18:42:42,{'keyboard': 'positive'}
+Apple,Yoga,Suman,1,Bad price,1,2025-05-15 18:42:42,{'price': 'negative'}
+Lenovo,Inspiron,Srija,5,Good price,2,2025-05-16 18:42:42,{'price': 'positive'}
+Apple,I6,Meera,5,Good performance,2,2025-05-12 18:42:42,{'performance': 'positive'}
+HP,MacBookAir,Neha,1,Good display,2,2025-07-04 18:42:42,{'display': 'positive'}
+Apple,Yoga,Dev,5,Bad keyboard,1,2025-06-19 18:42:42,{'keyboard': 'negative'}
+HP,Yoga,Soham,3,Good battery Bad price,2,2025-05-13 18:42:42,"{'battery': 'positive', 'price': 'negative'}"
+Apple,MacBookAir,Soham,1,Bad camera,1,2025-05-13 18:42:42,{'camera': 'negative'}
+Lenovo,MacBookAir,Srija,3,Bad design,1,2025-06-10 18:42:42,{'design': 'negative'}
+Lenovo,Inspiron,Dev,3,Good camera,2,2025-05-09 18:42:42,{'camera': 'positive'}
+Asus,Inspiron,Sudip,4,Bad keyboard Good camera,2,2025-06-15 18:42:42,"{'keyboard': 'negative', 'camera': 'positive'}"
+Apple,Inspiron,Sanya,5,Bad sound Good price,2,2025-06-16 18:42:42,"{'sound': 'negative', 'price': 'positive'}"
+HP,MacBookAir,Chirag,1,Bad display Good camera,2,2025-06-21 18:42:42,"{'display': 'negative', 'camera': 'positive'}"
+Apple,MacBookAir,Srija,3,Bad display,1,2025-05-18 18:42:42,{'display': 'negative'}
+Dell,I6,Sudip,5,Bad display Good design,2,2025-06-27 18:42:42,"{'display': 'negative', 'design': 'positive'}"
+Dell,Yoga,Harshit,3,Bad price Bad sound,1,2025-05-10 18:42:42,"{'price': 'negative', 'sound': 'negative'}"
+Dell,Inspiron,Amrita,3,Good display Good performance,2,2025-07-04 18:42:42,"{'display': 'positive', 'performance': 'positive'}"
+Lenovo,Vivobook,Neha,5,Good camera,2,2025-06-18 18:42:42,{'camera': 'positive'}
+Asus,MacBookAir,Harshit,1,Bad performance,1,2025-06-26 18:42:42,{'performance': 'negative'}
+Asus,I6,Chirag,5,Good display,2,2025-05-14 18:42:42,{'display': 'positive'}
+Asus,Inspiron,Srija,1,Good camera,2,2025-05-14 18:42:42,{'camera': 'positive'}
+HP,Yoga,Sanya,1,Good battery,2,2025-05-25 18:42:42,{'battery': 'positive'}
+Lenovo,Inspiron,Meera,3,Good display,2,2025-06-20 18:42:42,{'display': 'positive'}
+Asus,Yoga,Harshit,4,Good display Bad battery,2,2025-06-25 18:42:42,"{'display': 'positive', 'battery': 'negative'}"
+Asus,I6,Diya,1,Bad display Bad battery,1,2025-06-06 18:42:42,"{'display': 'negative', 'battery': 'negative'}"
+Dell,Inspiron,Suresh,4,Great,2,2025-07-05 18:44:56,{}
+HP,I9,Rahul,4,Not Bad,1,2025-07-05 22:23:59,{}
+Dell,Inspiron,Manoj,4,Camera is Good but Display Average,1,2025-07-05 22:54:28,"{'display': 'positive', 'camera': 'positive'}"
+Dell,Inspiron,Risabh,4,Camera Good but Display Average,1,2025-07-05 22:57:01,"{'display': 'positive', 'camera': 'positive'}"

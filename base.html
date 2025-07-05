@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Laptop Reviews{% endblock %}</title>
+
+  <!-- Embedded CSS -->
+  <style>
+    body {
+      background-color: #121212;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #d4af37; /* gold */
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    nav a {
+      color: #121212;
+      margin: 0 20px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: white;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    h2 {
+      text-align: center;
+      color: #d4af37;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    label {
+      font-weight: bold;
+      color: #d4af37;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #d4af37;
+      border-radius: 4px;
+      background: #2c2c2c;
+      color: #f5f5f5;
+    }
+
+    button {
+      background-color: #d4af37;
+      color: #121212;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #bfa233;
+      transform: scale(1.05);
+    }
+
+    #url-msg {
+      display: block;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .btn {
+      background-color: #d4af37;
+      color: #121212;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    .btn:hover {
+      background-color: #bfa233;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+  <nav>
+    <!-- Company name & logo at extreme left -->
+    <div style="display: flex; align-items: center;">
+      <span style="font-size: 30px; font-weight: bold; margin-left: 10px; color: black;">💻 LaptiQ</span>
+    </div>
+
+    <!-- Navigation links -->
+    <div>
+      
+
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('submit_review') }}">Submit Review</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('predict_price') }}">Know Your Laptop Price</a>
+        <a href="{{ url_for('search_reviews') }}">Search Reviews</a>
+       <a href="{{ url_for('logout') }}" style="background-color: #121212; color: #d4af37; padding: 8px 15px; border-radius: 4px; margin: 0 20px;">Logout</a>
+{% else %}
+  <span style="font-size: 20px; font-weight: bold; color: black; display: inline-block; text-align: center; width: 100%;padding-right:760px">
+    🚀 Sign up now to unlock reviews, dashboards, and price predictions!
+  </span>
+{% endif %}
+    </div>
+  </nav>
+
+  <!-- Running catchy line -->
+  <div style="background-color: #1e1e1e; overflow: hidden; white-space: nowrap;">
+    <p style="display: inline-block; padding: 10px 0; margin: 0; font-size: 16px; color: #d4af37; animation: slide 15s linear infinite;">
+      ✨ Empowering Your Laptop Decisions with AI-powered Insights, Real Reviews, and Smart Price Predictions ✨
+    </p>
+  </div>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

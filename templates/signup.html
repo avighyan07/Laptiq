@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<style>
+  .signup-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+  }
+
+  .signup-form {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 8px;
+    color: white;
+    width: 300px;
+  }
+
+  .signup-form input[type="text"],
+  .signup-form input[type="email"],
+  .signup-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .signup-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d4af37;
+    color: #121212;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .signup-form button:hover {
+    background-color: #bfa233;
+  }
+
+  .alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .alert-danger {
+    background-color: #e74c3c;
+    color: white;
+  }
+
+  .alert-success {
+    background-color: #2ecc71;
+    color: white;
+  }
+</style>
+
+<div class="signup-container">
+  
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div id="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="signup-form">
+    <h2>Sign Up</h2>
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="email" name="email" placeholder="Email" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit">Sign Up</button>
+  </form>
+</div>
+
+<!-- Auto-dismiss flash messages after 5 seconds -->
+<script>
+  setTimeout(function() {
+    const flash = document.getElementById('flash-messages');
+    if (flash) {
+      flash.style.display = 'none';
+    }
+  }, 5000);
+</script>
+
+{% endblock %}
