@@ -132,6 +132,23 @@ def generate_wordcloud(text, filename, colormap='autumn'):
 def index():
     username = session.get('username')
     return render_template('index.html', username=username)
+@app.route('/search_reviews', methods=['GET', 'POST'])
+def search_reviews():
+    results = []
+    query = ''
+    if request.method == 'POST':
+        query = request.form.get('query', '').lower()
+        df_latest = pd.read_csv(DATA_FILE)
+
+        mask = (
+            df_latest['user_name'].str.lower().str.contains(query) |
+            df_latest['review_text'].str.lower().str.contains(query) |
+            df_latest['date'].str.contains(query)
+        )
+
+        results = df_latest[mask].to_dict(orient='records')
+
+    return render_template('search_reviews.html', results=results, query=query)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
