@@ -1,7 +1,6 @@
-# ======================
-# Import dependencies
-# ======================
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 import pandas as pd
 import joblib
 import os
@@ -12,13 +11,12 @@ import nltk
 from textblob import TextBlob
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+nltk.download('punkt')
+
 # ======================
-# App setup
+# App initialization
 # ======================
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -32,11 +30,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-# ======================
-# Download NLTK punkt
-# ======================
-nltk.download('punkt')
 
 # ======================
 # User model
@@ -56,27 +49,35 @@ def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 # ======================
-# Aspects for ABSA
+# Global constants
 # ======================
-aspects = ['battery', 'display', 'performance', 'design', 'keyboard', 'price', 'camera', 'sound']
+USER_FILE = 'users.csv'
+DATA_FILE = os.path.join(os.path.dirname(__file__), 'reviews.csv')
+expected_columns = ['company', 'model_name', 'user_name', 'rating', 'review_text', 'sentiment', 'date', 'aspect_sentiments']
+
+# Initialize users.csv if not exists
+if not os.path.exists(USER_FILE):
+    pd.DataFrame(columns=['username', 'email', 'password']).to_csv(USER_FILE, index=False)
+
+# Load or initialize reviews data
+try:
+    df = pd.read_csv(DATA_FILE)
+    for col in expected_columns:
+        if col not in df.columns:
+            df[col] = None
+    df = df[expected_columns]
+    print(f"✅ Loaded {len(df)} reviews from {DATA_FILE}")
+except Exception as e:
+    print("❌ Loading reviews.csv failed:", e)
+    df = pd.DataFrame(columns=expected_columns)
 
 # ======================
-# Load models
+# Load ML models
 # ======================
 vectorizer = joblib.load('models/vectorizer.joblib')
 sentiment_model = joblib.load('models/sentiment_model.joblib')
 pipe = pickle.load(open('models/pipe.pkl', 'rb'))
-
-# ======================
-# Data file setup
-# ======================
-DATA_FILE = '/tmp/reviews.csv'  # use /tmp for Render deployment stability
-
-expected_columns = ['company', 'model_name', 'user_name', 'rating', 'review_text', 'sentiment', 'date', 'aspect_sentiments']
-
-# Initialize reviews.csv if not exists
-if not os.path.exists(DATA_FILE):
-    pd.DataFrame(columns=expected_columns).to_csv(DATA_FILE, index=False)
+df_laptop = pickle.load(open('models/df.pkl', 'rb'))
 
 # ======================
 # Helper functions
@@ -92,10 +93,16 @@ def extract_model_from_url(url):
         else:
             return None, None
         slug_parts = slug.split('-')
-        return (slug_parts[0], slug_parts[1]) if len(slug_parts) >= 2 else (slug_parts[0], '')
+        if len(slug_parts) >= 2:
+            return slug_parts[0], slug_parts[1]
+        elif slug_parts:
+            return slug_parts[0], ''
+        return None, None
     except Exception as e:
         print("URL extraction error:", e)
         return None, None
+
+aspects = ['battery', 'display', 'performance', 'design', 'keyboard', 'price', 'camera', 'sound']
 
 def extract_aspect_sentiments(review):
     aspect_sentiments = {}
@@ -111,130 +118,200 @@ def extract_aspect_sentiments(review):
 
 def generate_wordcloud(text, filename, colormap='autumn'):
     wc = WordCloud(width=800, height=400, background_color='black', colormap=colormap).generate(text)
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wc, interpolation='bilinear')
+    plt.axis('off')
+    plt.tight_layout()
     wc.to_file(f'static/{filename}')
     plt.close()
 
 # ======================
 # Routes
 # ======================
-
 @app.route('/')
 def index():
-    return render_template('index.html')
+    username = session.get('username')
+    return render_template('index.html', username=username)
 
-# -------- Signup --------
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        if User.query.filter_by(username=username).first():
-            flash('Username exists.', 'danger')
+        existing_username = User.query.filter_by(username=username).first()
+        if existing_username:
+            flash('Username already exists. Please choose another.', 'danger')
             return render_template('signup.html')
-        if User.query.filter_by(email=email).first():
-            flash('Email exists.', 'danger')
+
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_email:
+            flash('Email already exists. Please login.', 'danger')
             return render_template('signup.html')
 
         new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+
+        pd.DataFrame([{
+            'username': username,
+            'email': email,
+            'password': hashed_password
+        }]).to_csv(USER_FILE, mode='a', header=not os.path.exists(USER_FILE), index=False)
+
         login_user(new_user)
-        flash('Signup successful.', 'success')
+        session['username'] = username
+        flash('Signup successful!', 'success')
         return redirect(url_for('index'))
+
     return render_template('signup.html')
 
-# -------- Login --------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
+            session['username'] = user.username
             flash('Login successful.', 'success')
             return redirect(url_for('index'))
         else:
             flash('Invalid credentials.', 'danger')
             return redirect(url_for('login'))
+
     return render_template('login.html')
 
-# -------- Logout --------
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('Logged out.', 'success')
+    session.pop('username', None)
+    flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
 
-# -------- Submit review --------
 @app.route('/submit_review', methods=['GET', 'POST'])
 def submit_review():
+    global df
     message = ''
     if request.method == 'POST':
         url = request.form.get('url')
         user_name = request.form.get('user_name')
         rating_str = request.form.get('rating')
         review_text = request.form.get('review_text')
-        rating = int(rating_str) if rating_str else None
-        company, model_name = extract_model_from_url(url) if url and url.strip() else (None, None)
 
-        df = pd.read_csv(DATA_FILE)
+        rating = int(rating_str) if rating_str else None
+        company, model_name = (extract_model_from_url(url) if url and url.strip()
+                               else (request.form.get('company'), request.form.get('model_name')))
 
         if company and model_name and user_name and review_text and rating:
             X = vectorizer.transform([review_text])
             sentiment = sentiment_model.predict(X)[0]
             date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
             aspect_sentiments = extract_aspect_sentiments(review_text)
-            new_review = pd.DataFrame([{
-                'company': company, 'model_name': model_name, 'user_name': user_name,
-                'rating': rating, 'review_text': review_text, 'sentiment': sentiment,
-                'date': date, 'aspect_sentiments': str(aspect_sentiments)
-            }])
+            aspect_sentiments_str = str(aspect_sentiments)
+
+            new_review = pd.DataFrame([[company, model_name, user_name, rating, review_text, sentiment, date, aspect_sentiments_str]],
+                                      columns=expected_columns)
             df = pd.concat([df, new_review], ignore_index=True)
             df.to_csv(DATA_FILE, index=False)
-            message = 'Review submitted successfully.'
+
+            message = 'Review submitted successfully with aspect sentiments!'
         else:
             message = 'Please fill all fields correctly.'
+
     return render_template('submit_review.html', message=message)
 
-# -------- Dashboard --------
 @app.route('/dashboard')
 def dashboard():
-    df = pd.read_csv(DATA_FILE)
-    pos_reviews = df[df['sentiment'] == 2]['review_text'].str.cat(sep=' ')
-    neg_reviews = df[df['sentiment'] == 1]['review_text'].str.cat(sep=' ')
-    if pos_reviews.strip(): generate_wordcloud(pos_reviews, 'pos_wordcloud.png', 'Greens')
-    if neg_reviews.strip(): generate_wordcloud(neg_reviews, 'neg_wordcloud.png', 'Reds')
+    df_latest = pd.read_csv(DATA_FILE)
 
+    pos_reviews = df_latest[df_latest['sentiment'] == 2]['review_text'].str.cat(sep=' ')
+    neg_reviews = df_latest[df_latest['sentiment'] == 1]['review_text'].str.cat(sep=' ')
+
+    if pos_reviews.strip():
+        generate_wordcloud(pos_reviews, 'pos_wordcloud.png', colormap='Greens')
+
+    if neg_reviews.strip():
+        generate_wordcloud(neg_reviews, 'neg_wordcloud.png', colormap='Reds')
+
+    grouped = df_latest.groupby(['company', 'model_name'])
     products = []
-    for (company, model_name), group in df.groupby(['company', 'model_name']):
+    for (company, model_name), group in grouped:
+        avg_rating = group['rating'].mean()
+        sentiment_counts = group['sentiment'].value_counts().to_dict()
+        recent_reviews = group.tail(3).to_dict(orient='records')
+        rating_counts = group['rating'].value_counts().sort_index().to_dict()
+        for i in range(1, 6):
+            if i not in rating_counts:
+                rating_counts[i] = 0
         products.append({
             'company': company,
             'model_name': model_name,
-            'avg_rating': group['rating'].mean(),
-            'sentiment_counts': group['sentiment'].value_counts().to_dict(),
-            'recent_reviews': group.tail(3).to_dict(orient='records'),
-            'rating_counts': {i: group['rating'].value_counts().get(i, 0) for i in range(1, 6)}
+            'avg_rating': avg_rating,
+            'sentiment_counts': sentiment_counts,
+            'recent_reviews': recent_reviews,
+            'rating_counts': rating_counts
         })
+
     return render_template('dashboard.html', products=products)
 
-# -------- Search reviews --------
-@app.route('/search_reviews', methods=['GET', 'POST'])
-def search_reviews():
-    results = []
-    query = request.form.get('query', '').lower() if request.method == 'POST' else ''
-    if query:
-        df = pd.read_csv(DATA_FILE)
-        mask = df['user_name'].str.lower().str.contains(query) | df['review_text'].str.lower().str.contains(query) | df['date'].str.contains(query)
-        results = df[mask].to_dict(orient='records')
-    return render_template('search_reviews.html', results=results, query=query)
+@app.route('/predict_form', methods=['GET'])
+def predict_form():
+    companies = ['Dell', 'HP', 'Apple']
+    typenames = ['Notebook', 'Gaming']
+    cpu_brands = ['Intel Core i5', 'Intel Core i7']
+    gpu_brands = ['Nvidia', 'AMD']
+    oss = ['Windows', 'Mac']
+    return render_template('predict_form.html',
+                           companies=companies,
+                           typenames=typenames,
+                           cpu_brands=cpu_brands,
+                           gpu_brands=gpu_brands,
+                           oss=oss)
+
+@app.route('/predict_price', methods=['GET', 'POST'])
+def predict_price():
+    if request.method == 'POST':
+        company = request.form['company']
+        typename = request.form['typename']
+        ram = int(request.form['ram'])
+        weight = float(request.form['weight'])
+        touchscreen = int(request.form['touchscreen'])
+        ips = int(request.form['ips'])
+        ppi = float(request.form['ppi'])
+        cpu_brand = request.form['cpu_brand']
+        gpu_brand = request.form['gpu_brand']
+        os = request.form['os']
+
+        input_df = pd.DataFrame([{
+            'Company': company,
+            'TypeName': typename,
+            'Ram': ram,
+            'Weight': weight,
+            'Touchscreen': touchscreen,
+            'Ips': ips,
+            'ppi': ppi,
+            'Cpu brand': cpu_brand,
+            'Gpu brand': gpu_brand,
+            'bavii': gpu_brand,
+            'os': os
+        }])
+
+        predicted_price = int(pipe.predict(input_df)[0])
+        return render_template('predict.html', price=predicted_price)
+    else:
+        return redirect(url_for('predict_form'))
 
 # ======================
-# Run app
+# Run the app
 # ======================
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
