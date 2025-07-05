@@ -13,7 +13,9 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import nltk
 nltk.download('punkt')
+
 
 # ======================
 # App initialization
@@ -100,13 +102,14 @@ def extract_model_from_url(url):
         return None, None
     except Exception as e:
         print("URL extraction error:", e)
-        return None, None
+        return None, None 
 
 aspects = ['battery', 'display', 'performance', 'design', 'keyboard', 'price', 'camera', 'sound']
 
 def extract_aspect_sentiments(review):
     aspect_sentiments = {}
-    tokens = nltk.word_tokenize(review.lower())
+    tokens = review.lower().split()  # safer than nltk word_tokenize in deployment
+
     blob = TextBlob(review)
     for aspect in aspects:
         if aspect in tokens:
@@ -115,6 +118,7 @@ def extract_aspect_sentiments(review):
                     polarity = sentence.sentiment.polarity
                     aspect_sentiments[aspect] = 'positive' if polarity > 0 else 'negative' if polarity < 0 else 'neutral'
     return aspect_sentiments
+
 
 def generate_wordcloud(text, filename, colormap='autumn'):
     wc = WordCloud(width=800, height=400, background_color='black', colormap=colormap).generate(text)
@@ -132,6 +136,15 @@ def generate_wordcloud(text, filename, colormap='autumn'):
 def index():
     username = session.get('username')
     return render_template('index.html', username=username)
+
+@app.route('/extract_model', methods=['POST'])
+def extract_model():
+    url = request.form.get('url')
+    company, model_name = extract_model_from_url(url)
+    if company and model_name:
+        return jsonify({'success': True, 'company': company, 'model_name': model_name})
+    else:
+        return jsonify({'success': False})
 @app.route('/search_reviews', methods=['GET', 'POST'])
 def search_reviews():
     results = []
